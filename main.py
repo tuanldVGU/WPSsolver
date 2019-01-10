@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import filedialog
 from solver import WPS_solver
+from solver_ga import WPS_solver_ga
 
 def syncPre(val):
     tmp = 8-int(val)
@@ -76,5 +77,20 @@ wdEntry.grid(row=2,column=1)
 
 # Solve the problem
 solBtn = Button(root, text="Solve", command= lambda: WPS_solver(peopleFile.get(),salaryFile.get(),prtVal,btVal,postVal)).grid(row=4, column=0, columnspan=6,sticky=N+S+E+W)
+
+# GA population
+populationGA = StringVar()
+populationGA.set("20")
+pGALabel = Label(root,text="GA population:").grid(row=5,sticky="W")
+pGAEntry = Entry(root, textvariable= populationGA).grid(row=5,column=1)
+
+# GA generation
+generationGA = StringVar()
+generationGA.set("1000")
+gGALabel = Label(root,text="GA population:").grid(row=6,sticky="W")
+gGAEntry = Entry(root, textvariable= generationGA).grid(row=6,column=1)
+
+# Solve the problem GA
+solBtn1 = Button(root, text="Solve GA", command= lambda: WPS_solver_ga(peopleFile.get(),salaryFile.get(),prtVal,btVal,postVal,int(populationGA.get()),int(generationGA.get()))).grid(row=7, column=0, columnspan=6,sticky=N+S+E+W)
 
 root.mainloop()

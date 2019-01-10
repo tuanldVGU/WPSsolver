@@ -23,7 +23,6 @@ def printout(inp,maxE):
 
 def read_CSV(fileName):
     result = []
-    print(fileName)
     f=codecs.open(fileName,"rb","utf-16")
     csvread=csv.reader(f,delimiter='\t')
     for row in csvread:
@@ -36,7 +35,7 @@ def read_CSV(fileName):
     return result
 
 def WPS_solver(esave,ssave,prebreak,midbreak,postbreak):
-    print(esave,ssave,prebreak,midbreak,postbreak)
+    # print(esave,ssave,prebreak,midbreak,postbreak)
     
     m = GEKKO()
     m.options.SOLVER=1  # APOPT is an MINLP solver
@@ -102,10 +101,10 @@ def WPS_solver(esave,ssave,prebreak,midbreak,postbreak):
     m.solve(GEKKO(remote = True))
 
     #results
-    # print('')
-    # print('Results: ')
-    # print(vars().value)
-    # printout(vars().value)
+    print('')
+    print('Results: ')
+    print(vars().value)
+    printout(vars().value)
     hour = []
     value = []
     sum = 0
