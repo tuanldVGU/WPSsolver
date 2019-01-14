@@ -4,6 +4,9 @@ from gekko import GEKKO
 import csv
 import codecs
 from pandas import DataFrame
+import matplotlib
+
+matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
