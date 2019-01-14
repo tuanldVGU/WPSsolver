@@ -31,10 +31,10 @@ def read_CSV(fileName):
         for x in temp:
             tmp.append(int(x))
         result.append(tmp)
-        print(result)
+        # print(result)
     return result
 
-def WPS_solver(esave,ssave,prebreak,midbreak,postbreak):
+def WPS_solver(esave,salary,prebreak,midbreak,postbreak):
     # print(esave,ssave,prebreak,midbreak,postbreak)
     
     m = GEKKO()
@@ -101,10 +101,12 @@ def WPS_solver(esave,ssave,prebreak,midbreak,postbreak):
     m.solve(GEKKO(remote = True))
 
     #results
-    print('')
-    print('Results: ')
-    print(vars().value)
-    printout(vars().value)
+    # print('')
+    # print('Results: ')
+    #cle print(vars().value)
+    # for i in range (1,25):
+    #     print('x'+str(i), str(vars() ["x"+str(i)].value))
+    # printout(vars().value)
     hour = []
     value = []
     sum = 0

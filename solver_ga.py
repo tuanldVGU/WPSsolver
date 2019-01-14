@@ -30,7 +30,7 @@ prebreak = 4
 midbreak = 2
 postbreak = 4
 
-def printout(inp,maxE):
+def printout(inp,maxE,s):
     res= Tk()    
     res.title("WPS solver | Solution")
 
@@ -41,7 +41,7 @@ def printout(inp,maxE):
     bar1.get_tk_widget().grid(row=0,sticky=N+S+E+W)
     df.plot(kind='bar', legend=True, ax=ax1)
     ax1.set_title('Staff scheduling in one day')
-    resultLabel = Label(res,text="Total number of employee"+str(maxE)).grid(row=1,sticky=N+S+E+W)
+    resultLabel = Label(res,text="Total number of employee "+str(maxE)+" and total cost is: "+str(maxE*s)+" USD").grid(row=1,sticky=N+S+E+W)
 
 def read_CSV(fileName):
     result = []
@@ -56,7 +56,7 @@ def read_CSV(fileName):
         # print(result)
     return result
 
-def WPS_solver_ga(esave,ssave,preb,midb,postb,p,g):
+def WPS_solver_ga(esave,salary,preb,midb,postb,p,g):
     global prebreak,midbreak,postbreak,population,generations 
     prebreak = preb
     midbreak = midb
@@ -84,7 +84,7 @@ def WPS_solver_ga(esave,ssave,preb,midb,postb,p,g):
         hour.append('x'+str(i))
     inp = { 'hour' : hour, '# of employee' : ans_agent}
     
-    printout(inp,ans)
+    printout(inp,ans,salary)
 
 def acqire_req(inp):
     
