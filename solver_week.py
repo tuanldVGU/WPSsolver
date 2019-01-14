@@ -3,33 +3,93 @@ import pandas as pd
 import numpy as np
 #import gurobipy as gp
 from gurobipy import *
-def WPS_solver_week(wsave,salary,maxwork,breakday,otSalary):
-    shiftList = ['Monday1','Monday2','Tuesday1','Tuesday2','Wednesday1','Wednesday2'
-             ,'Thursday1','Thursday2','Friday1','Friday2','Saturday1','Saturday2','Sunday1','Sunday2']
+import csv
+import codecs
+from tkinter import *
+from tkinter import filedialog
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
+def printout(inp,maxE):
+    res= Tk()    
+    res.title("WPS solver | Solution")
+
+    df = DataFrame(inp,columns=['hour', '# of employee'])
+    figure1 = plt.Figure(figsize=(6,5), dpi=100)
+    ax1 = figure1.add_subplot(111)
+    bar1 = FigureCanvasTkAgg(figure1, res)
+    bar1.get_tk_widget().grid(row=0,sticky=N+S+E+W)
+    df.plot(kind='bar', legend=True, ax=ax1)
+    ax1.set_title('Staff scheduling in one day')
+    resultLabel = Label(res,text="Total number of employee"+str(maxE)).grid(row=1,sticky=N+S+E+W)
+
+def read_CSV(fileName):
+    result = []
+    f=codecs.open(fileName,"rb","utf-16")
+    csvread=csv.reader(f,delimiter='\t')
+    for row in csvread:
+        temp = row[0].split(',')
+        tmp = []
+        tmp.append(temp[0])
+        try:
+            tmp.append(int(temp[1]))
+        except:
+            tmp.append(temp[1])
+        # for x in temp:
+        #     tmp.append(int(x))
+        result.append(tmp)
+        # print(result)
+    return result
+    
+def WPS_solver_week(wsave,ssave,asave,msave,maxwork,breakday,otSalary):
+    shiftList = []
+    shiftReq = []
+    tmp = read_CSV(wsave)
+    for row in tmp:
+        shiftList.append(row[0])
+        shiftReq.append(row[1])
+
+    workerList = []
+    regCost = []
+    tmp = read_CSV(ssave)
+    for row in tmp:
+        workerList.append(row[0])
+        regCost.append(row[1])
+
+    mgmtList = []
+    tmp = read_CSV(ssave)
+    for row in tmp:
+        mgmtList.append(row[0])
+
+    # shiftList = ['Monday1','Monday2','Tuesday1','Tuesday2','Wednesday1','Wednesday2'
+    #          ,'Thursday1','Thursday2','Friday1','Friday2','Saturday1','Saturday2','Sunday1','Sunday2']
     workerList = ['EE01','EE02','EE03','EE04','EE05','EE06','EE07','EE08','EE09','EE10', 'EE11']
 
-    shiftReq = [3,2,4,4,5,4,5,4,2,4,5,4,3,5]
+    # shiftReq = [3,2,4,4,5,4,5,4,2,4,5,4,3,5]
     shiftRequirements  = { s : shiftReq[i] for i,s in enumerate(shiftList) }
 
     # Assume everyone is available
     availability = pd.DataFrame(np.ones((len(workerList), len(shiftList))), index=workerList, columns=shiftList)
 
     # For illustration, assume following people are unavailable: EE02 on Tuesday1, EE05 on Saturday2, EE08 on Thursday1
-    availability.at['EE02','Tuesday1'] = 0
-    availability.at['EE05','Saturday2'] = 0
-    availability.at['EE08','Thursday1'] = 0
+    tmp = read_CSV(asave)
+    for i,row in enumerate(tmp):
+        availability.at[row[0],row[1]] = 0
+    # availability.at['EE02','Tuesday1'] = 0
+    # availability.at['EE05','Saturday2'] = 0
+    # availability.at['EE08','Thursday1'] = 0
 
     # Create availability dictionary to be used in decision variable bounding
     avail = {(w,s) : availability.loc[w,s] for w in workerList for s in shiftList}
 
-    mgmtList = ['EE01','EE03','EE05','EE07']
+    # mgmtList = ['EE01','EE03','EE05','EE07']
     nonmgmtList = [x for x in workerList if x not in mgmtList]
 
     # Cost of a regular shift
-    regCost = [200,100,225,110,190,105,210,120,95,100, 200]
+    # regCost = [200,100,225,110,190,105,210,120,95,100, 200]
 
     # Cost of overtime shift
-    OTCost = [1.5*x for x in regCost]
+    OTCost = [otSalary*x for x in regCost]
 
     regularCost  = { w : regCost[i] for i,w in enumerate(workerList) }
     overtimeCost  = { w : OTCost[i] for i,w in enumerate(workerList) }
