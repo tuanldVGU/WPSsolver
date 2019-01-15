@@ -15,7 +15,6 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 def printout(inp,maxE):
     res= Tk()    
     res.title("WPS solver | Solution")
-
     df = DataFrame(inp,columns=['hour', '# of employee'])
     figure1 = plt.Figure(figsize=(6,5), dpi=100)
     ax1 = figure1.add_subplot(111)
@@ -24,6 +23,7 @@ def printout(inp,maxE):
     df.plot(kind='bar', legend=True, ax=ax1)
     ax1.set_title('Staff scheduling in one day')
     resultLabel = Label(res,text="Total number of employee"+str(maxE)).grid(row=1,sticky=N+S+E+W)
+
 def printoutWeek(shiftDetail, shiftList, totalCost):
     res= Tk()    
     res.title("WPS solver | Solution")
@@ -76,7 +76,7 @@ def WPS_solver_week(wsave,ssave,asave,msave,otSalary):
 
     # shiftList = ['Monday1','Monday2','Tuesday1','Tuesday2','Wednesday1','Wednesday2'
     #          ,'Thursday1','Thursday2','Friday1','Friday2','Saturday1','Saturday2','Sunday1','Sunday2']
-    workerList = ['EE01','EE02','EE03','EE04','EE05','EE06','EE07','EE08','EE09','EE10', 'EE11']
+    # workerList = ['EE01','EE02','EE03','EE04','EE05','EE06','EE07','EE08','EE09','EE10', 'EE11']
 
     # shiftReq = [3,2,4,4,5,4,5,4,2,4,5,4,3,5]
     shiftRequirements  = { s : shiftReq[i] for i,s in enumerate(shiftList) }
