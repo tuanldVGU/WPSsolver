@@ -5,7 +5,9 @@ import numpy as np
 from gurobipy import *
 import csv
 import codecs
+from pandas import DataFrame
 from tkinter import *
+from tkinter import ttk
 from tkinter import filedialog
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -22,7 +24,18 @@ def printout(inp,maxE):
     df.plot(kind='bar', legend=True, ax=ax1)
     ax1.set_title('Staff scheduling in one day')
     resultLabel = Label(res,text="Total number of employee"+str(maxE)).grid(row=1,sticky=N+S+E+W)
-
+def printoutWeek(shiftDetail, shiftList, totalCost):
+    res= Tk()    
+    res.title("WPS solver | Solution")
+    tree = ttk.Treeview(res)
+    tree["columns"]= shiftList
+    i = 0
+    for s in shiftList:
+        tree.insert("" , i,    text=s, values=shiftDetail[i])
+        i += 1
+    tree.insert("", i, text='Total cost', values=totalCost )
+    tree.pack(fill='both')
+    
 def read_CSV(fileName):
     result = []
     f=codecs.open(fileName,"rb","utf-16")
@@ -167,11 +180,13 @@ def WPS_solver_week(wsave,ssave,asave,msave,maxwork,breakday,otSalary):
             dashboard.at[w,s] = sol.loc['x['+w+','+s+']',][0]
             
     dashboard
-
+    a =[]
     shiftAssignments = {}
     for s in shiftList:
         shiftAssignments.update({s: list(dashboard[dashboard[s] == 1].loc[:,].index)})
+        a.append(list(dashboard[dashboard[s] == 1].loc[:,].index))
         
-    print('result')
-    print(shiftAssignments)
+    #print('result')
+    #print(shiftAssignments)
+    printoutWeek(a, shiftList, str(model.ObjVal))
     return "yes"
