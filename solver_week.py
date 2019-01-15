@@ -54,7 +54,7 @@ def read_CSV(fileName):
         # print(result)
     return result
     
-def WPS_solver_week(wsave,ssave,asave,msave,maxwork,breakday,otSalary):
+def WPS_solver_week(wsave,ssave,asave,msave,otSalary):
     shiftList = []
     shiftReq = []
     tmp = read_CSV(wsave)
