@@ -14,16 +14,17 @@ class Agent:
         self.employee = []
         for req in reqs:
             self.employee.append(random.randint(0,req))
-        self.fitness = -1
+        self.fitness = -1.0
 
     def __str__(self):
 
         return "Employee: " + str(self.employee) + "; Fitness: " + str(self.fitness)
 
+
 shift = None
 population = 20
 generations = 1000
-reqs = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+reqs = [0] *24
 ans = 10000
 ans_agent = []
 prebreak = 4
@@ -41,7 +42,8 @@ def printout(inp,maxE,s):
     bar1.get_tk_widget().grid(row=0,sticky=N+S+E+W)
     df.plot(kind='bar', legend=True, ax=ax1)
     ax1.set_title('Staff scheduling in one day')
-    resultLabel = Label(res,text="Total number of employee "+str(maxE)+" and total cost is: "+str(maxE*s)+" USD").grid(row=1,sticky=N+S+E+W)
+    
+    resultLabel = Label(res,text="Total number of employee "+str(maxE)+" and total cost is: "+str(maxE*500)+" USD").grid(row=1,sticky=N+S+E+W)
 
 def read_CSV(fileName):
     result = []
@@ -75,7 +77,7 @@ def WPS_solver_ga(esave,salary,preb,midb,postb,p,g):
         agents = crossover(agents)
         agents = mutation(agents)
 
-        if any(agent.fitness >=generations for agent in agents):
+        if any(agent.fitness == 1.0 for agent in agents):
 
             print("Threshold met!")
             break
@@ -114,16 +116,14 @@ def fitness(agents):
                 req_test += agent.employee[j%24]
 
             if req_test < reqs[i]:
-                agent.fitness = -1
+                agent.fitness = -1.0
                 tmp = False
                 break
         if tmp == True:
             if sum < ans:
                 ans = sum
                 ans_agent = agent.employee
-                agent.fitness += 2
-            else:
-                agent.fitness += 1
+                agent.fitness = 1 / (sum*1.0)
 
     return agents
 
@@ -163,12 +163,9 @@ def crossover(agents):
 
 def mutation(agents):
     
-    for agent in agents:
+    for i,agent in enumerate(agents):
         for idx in range(24):
-            if random.uniform(0.0,1.0) <=0.1:
-                
+            if random.uniform(0.0,1.0) <= 0.1:
                 tmp = random.randint(0,reqs[idx])
-                agent.employee[idx] = tmp
-
-        
+                agents[i].employee[idx] = tmp        
     return agents
